@@ -9,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -31,7 +30,7 @@ public class UserControllerTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void Post_ShouldAddUserSuccessfully() {
+    void post_ShouldAddUserSuccessfully() {
         Map<String, Object> invalidUser = Map.of(
                 "id", 2,
                 "name", "Name",
@@ -52,7 +51,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWithInvalideEmail() {
+    void post_ShouldReturnBadRequestWithInvalideEmail() {
         Map<String, Object> invalidUser1 = Map.of(
                 "id", 2,
                 "name", "Name",
@@ -89,7 +88,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWithInvalideLogin() {
+    void post_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> invalidUser = Map.of(
                 "id", 2,
                 "name", "Name",
@@ -110,7 +109,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWithInvalideBirthday() {
+    void post_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> invalidUser = Map.of(
                 "id", 2,
                 "name", "Name",
@@ -131,7 +130,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Get_ShouldReturnListWithUsers() {
+    void get_ShouldReturnListWithUsers() {
         Map<String, Object> invalidUser1 = Map.of(
                 "id", 4,
                 "name", "Not",
@@ -177,7 +176,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Put_ShouldUpdateUserSuccessfully() {
+    void put_ShouldUpdateUserSuccessfully() {
         Map<String, Object> user1 = Map.of(
                 "id", 10,
                 "name", "Name",
@@ -213,7 +212,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalideEmail() {
+    void put_ShouldReturnBadRequestWithInvalideEmail() {
         Map<String, Object> user1 = Map.of(
                 "id", 3,
                 "name", "Name",
@@ -265,7 +264,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalideLogin() {
+    void put_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> user1 = Map.of(
                 "id", 3,
                 "name", "Name",
@@ -319,7 +318,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalideBirthday() {
+    void put_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> user1 = Map.of(
                 "id", 3,
                 "name", "Name",
@@ -356,7 +355,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalidId() {
+    void put_ShouldReturnBadRequestWithInvalidId() {
         Map<String, Object> user1 = Map.of(
                 "id", 18,
                 "name", "Alena",

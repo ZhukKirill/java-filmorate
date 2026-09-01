@@ -31,7 +31,7 @@ class FilmControllerTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    void Post_ShouldAddFilmSuccessfully() {
+    void post_ShouldAddFilmSuccessfully() {
         Map<String, Object> filmRequest = Map.of(
                 "id", 1,
                 "name", "Test Film",
@@ -48,7 +48,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWhenNameIsBlank() {
+    void post_ShouldReturnBadRequestWhenNameIsBlank() {
         Map<String, Object> invalidFilm = Map.of(
                 "id", 2,
                 "name", "   ",
@@ -69,7 +69,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWithDescriptionLengthMore200Symbols() {
+    void post_ShouldReturnBadRequestWithDescriptionLengthMore200Symbols() {
         Map<String, Object> invalidFilm = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -88,7 +88,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWithInvalidReleaseDate() {
+    void post_ShouldReturnBadRequestWithInvalidReleaseDate() {
         Map<String, Object> invalidFilm = Map.of(
                 "id", 15,
                 "name", "NotBlank",
@@ -108,7 +108,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Post_ShouldReturnBadRequestWithInvalidDuration() {
+    void post_ShouldReturnBadRequestWithInvalidDuration() {
         Map<String, Object> film = Map.of(
                 "id", 10,
                 "name", "NotBlank",
@@ -128,7 +128,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Get_ShouldReturnListWithFilms() {
+    void get_ShouldReturnListWithFilms() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -173,7 +173,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Put_shouldReturnUpdatedFilmSuccessfully() {
+    void put_shouldReturnUpdatedFilmSuccessfully() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -207,7 +207,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalidName() {
+    void put_ShouldReturnBadRequestWithInvalidName() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -241,7 +241,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalidDescription() {
+    void put_ShouldReturnBadRequestWithInvalidDescription() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -275,7 +275,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalidReleaseDate() {
+    void put_ShouldReturnBadRequestWithInvalidReleaseDate() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -310,7 +310,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalidDuration() {
+    void put_ShouldReturnBadRequestWithInvalidDuration() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
@@ -345,7 +345,7 @@ class FilmControllerTests {
     }
 
     @Test
-    void Put_ShouldReturnBadRequestWithInvalidId() {
+    void put_ShouldReturnBadRequestWithInvalidId() {
         Map<String, Object> film1 = Map.of(
                 "id", 2,
                 "name", "NotBlank",
