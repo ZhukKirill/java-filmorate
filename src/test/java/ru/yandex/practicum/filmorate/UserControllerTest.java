@@ -53,7 +53,7 @@ public class UserControllerTest {
     @Test
     void post_ShouldReturnBadRequestWithInvalideEmail() {
         Map<String, Object> invalidUser1 = Map.of(
-                "id", 2,
+                "id", 40,
                 "name", "Name",
                 "email", " ",
                 "login", "Login",
@@ -68,7 +68,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> invalidUser2 = Map.of(
-                "id", 3,
+                "id", 41,
                 "name", "Name",
                 "email", "email",
                 "login", "Login",
@@ -90,7 +90,7 @@ public class UserControllerTest {
     @Test
     void post_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> invalidUser = Map.of(
-                "id", 2,
+                "id", 50,
                 "name", "Name",
                 "email", "email@",
                 "login", " ",
@@ -111,7 +111,7 @@ public class UserControllerTest {
     @Test
     void post_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> invalidUser = Map.of(
-                "id", 2,
+                "id", 60,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
