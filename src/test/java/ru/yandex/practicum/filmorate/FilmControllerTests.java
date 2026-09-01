@@ -50,7 +50,7 @@ class FilmControllerTests {
     @Test
     void post_ShouldReturnBadRequestWhenNameIsBlank() {
         Map<String, Object> invalidFilm = Map.of(
-                "id", 2,
+                "id", 104,
                 "name", "   ",
                 "description", "Desc",
                 "releaseDate", "2000-01-01",
@@ -71,7 +71,7 @@ class FilmControllerTests {
     @Test
     void post_ShouldReturnBadRequestWithDescriptionLengthMore200Symbols() {
         Map<String, Object> invalidFilm = Map.of(
-                "id", 2,
+                "id", 9,
                 "name", "NotBlank",
                 "description", "D".repeat(201),
                 "releaseDate", "2000-01-01",
@@ -130,7 +130,7 @@ class FilmControllerTests {
     @Test
     void get_ShouldReturnListWithFilms() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
+                "id", 75,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -165,7 +165,7 @@ class FilmControllerTests {
         );
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertTrue(getResponse.getBody().toString()
-                .contains("Film(id=2, name=NotBlank, description=D, releaseDate=1895-12-28, duration=PT2M30S)")
+                .contains("Film(id=75, name=NotBlank, description=D, releaseDate=1895-12-28, duration=PT2M30S)")
         );
         assertTrue(getResponse.getBody().toString()
                 .contains("Film(id=3, name=Name, description=D, releaseDate=1895-12-28, duration=PT2M20S)")
