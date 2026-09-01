@@ -313,8 +313,8 @@ public class UserControllerTest {
         assertThat(response3.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response3.getBody().get("error"))
                 .isEqualTo("логин не может быть пустым и содержать пробелы");
-        assertThat(response2.getBody().get("error")).
-                isEqualTo("логин не может быть пустым и содержать пробелы");
+        assertThat(response2.getBody().get("error"))
+                .isEqualTo("логин не может быть пустым и содержать пробелы");
     }
 
     @Test
@@ -350,8 +350,8 @@ public class UserControllerTest {
         );
 
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response2.getBody().get("error")).
-                isEqualTo("дата рождения не может быть в будущем");
+        assertThat(response2.getBody().get("error"))
+                .isEqualTo("дата рождения не может быть в будущем");
     }
 
     @Test
@@ -385,7 +385,7 @@ public class UserControllerTest {
         );
 
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response2.getBody().get("error")).
-                isEqualTo("Пользователь с id = " + 20 + " не найден");
+        assertThat(response2.getBody().get("error"))
+                .isEqualTo("Пользователь с id = " + 20 + " не найден");
     }
 }
