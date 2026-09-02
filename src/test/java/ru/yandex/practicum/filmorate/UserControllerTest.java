@@ -125,6 +125,25 @@ public class UserControllerTest {
     }
 
     @Test
+    void post_ShouldReturnUserWithNameEqualLogin() {
+        Map<String, Object> user = Map.of(
+                "name", " ",
+                "email", "email@",
+                "login", "Login",
+                "birthday", "2021-01-01"
+        );
+        ResponseEntity<User> response = restTemplate.exchange(
+                "/users",
+                HttpMethod.POST,
+                new HttpEntity<>(user),
+                User.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody().getName()).isEqualTo("Login");
+    }
+
+    @Test
     void get_ShouldReturnListWithUsers() {
         Map<String, Object> invalidUser1 = Map.of(
                 "name", "Not",

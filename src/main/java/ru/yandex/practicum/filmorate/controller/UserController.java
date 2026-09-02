@@ -42,6 +42,11 @@ public class UserController {
             log.info("дата рождения не может быть в будущем");
             throw new ValidationException("дата рождения не может быть в будущем");
         }
+        if (user.getName() == null || user.getName().isBlank()) {
+            log.info("имя пользователя не было передано");
+            user.setName(user.getLogin());
+            log.info("имени пользователя присвоено значение логина");
+        }
         long id = getNextId();
         log.debug("сгенерирован id");
         user.setId(id);
