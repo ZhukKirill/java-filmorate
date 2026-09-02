@@ -22,10 +22,6 @@ public class FilmController {
     @ResponseStatus(HttpStatus.CREATED)
     public Film addFilm(@RequestBody Film film) {
         log.info("начато добавление фильм");
-        if (films.containsKey(film.getId())) {
-            log.info("фильм с таким id уже добавлен");
-            throw new ValidationException("фильм с таким id уже добавлен");
-        }
         if (film.getName() == null || film.getName().isBlank()) {
             log.info("название не может быть пустым");
             throw new ValidationException("название не может быть пустым");
@@ -43,9 +39,6 @@ public class FilmController {
             log.info("продолжительность фильма в секундах должна быть больше нуля");
             throw new ValidationException("продолжительность фильма в секундах должна быть больше нуля");
         }
-//        if (film.getId() == null) {
-//            throw new ValidationException("id должен быть указан");
-//        }
         films.put(film.getId(), film);
         log.info("фильм добавлен");
         return film;

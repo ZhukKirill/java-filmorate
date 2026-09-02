@@ -22,13 +22,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User addUser(@RequestBody User user) {
         log.info("начато добавление пользователя");
-//        if (user.getId() == null) {
-//            throw new ValidationException("id должен быть указан");
-//        }
-        if (users.containsKey(user.getId())) {
-            log.info("пользователь с таким id уже добавлен");
-            throw new ValidationException("пользователь с таким id уже добавлен");
-        }
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             log.info("электронная почта не может быть пустой");
             throw new ValidationException("электронная почта не может быть пустой");
