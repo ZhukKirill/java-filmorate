@@ -21,7 +21,7 @@ public class FilmController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film addFilm(@RequestBody Film film) {
-        log.info("начато добавление фильм");
+        log.info("начато добавление фильма");
         if (film.getName() == null || film.getName().isBlank()) {
             log.info("название не может быть пустым");
             throw new ValidationException("название не может быть пустым");
@@ -39,7 +39,11 @@ public class FilmController {
             log.info("продолжительность фильма в секундах должна быть больше нуля");
             throw new ValidationException("продолжительность фильма в секундах должна быть больше нуля");
         }
-        films.put(film.getId(), film);
+        long id = getNextId();
+        log.debug("сгенерирован id");
+        film.setId(id);
+        log.debug("фильму присвоен id");
+        films.put(id, film);
         log.info("фильм добавлен");
         return film;
     }
@@ -78,5 +82,15 @@ public class FilmController {
         films.put(film.getId(), film);
         log.info("фильм обновлен");
         return film;
+    }
+
+    private long getNextId() {
+        long currentMaxId = films.keySet()
+                .stream()
+                .mapToLong(id -> id)
+                .max()
+                .orElse(0);
+        log.debug("вычислен максимальный id");
+        return ++currentMaxId;
     }
 }

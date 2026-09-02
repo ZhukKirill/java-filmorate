@@ -32,7 +32,6 @@ public class UserControllerTest {
     @Test
     void post_ShouldAddUserSuccessfully() {
         Map<String, Object> invalidUser = Map.of(
-                "id", 2,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -53,7 +52,6 @@ public class UserControllerTest {
     @Test
     void post_ShouldReturnBadRequestWithInvalideEmail() {
         Map<String, Object> invalidUser1 = Map.of(
-                "id", 40,
                 "name", "Name",
                 "email", " ",
                 "login", "Login",
@@ -68,7 +66,6 @@ public class UserControllerTest {
         );
 
         Map<String, Object> invalidUser2 = Map.of(
-                "id", 41,
                 "name", "Name",
                 "email", "email",
                 "login", "Login",
@@ -90,7 +87,6 @@ public class UserControllerTest {
     @Test
     void post_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> invalidUser = Map.of(
-                "id", 50,
                 "name", "Name",
                 "email", "email@",
                 "login", " ",
@@ -111,7 +107,6 @@ public class UserControllerTest {
     @Test
     void post_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> invalidUser = Map.of(
-                "id", 60,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -132,7 +127,6 @@ public class UserControllerTest {
     @Test
     void get_ShouldReturnListWithUsers() {
         Map<String, Object> invalidUser1 = Map.of(
-                "id", 4,
                 "name", "Not",
                 "email", "email@",
                 "login", "Logiin",
@@ -147,7 +141,6 @@ public class UserControllerTest {
         );
 
         Map<String, Object> invalidUser2 = Map.of(
-                "id", 5,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -170,15 +163,16 @@ public class UserControllerTest {
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertTrue(getResponse.getBody().toString()
-                .contains("User(id=4, email=email@, login=Logiin, name=Not, birthday=2001-01-01)"));
+                .contains("User(id=" + response1.getBody().getId()
+                        + ", email=email@, login=Logiin, name=Not, birthday=2001-01-01)"));
         assertTrue(getResponse.getBody().toString()
-                .contains("User(id=5, email=email@, login=Login, name=Name, birthday=2000-01-01)"));
+                .contains("User(id=" + response2.getBody().getId()
+                        + ", email=email@, login=Login, name=Name, birthday=2000-01-01)"));
     }
 
     @Test
     void put_ShouldUpdateUserSuccessfully() {
         Map<String, Object> user1 = Map.of(
-                "id", 10,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -193,7 +187,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user2 = Map.of(
-                "id", 10,
+                "id", response1.getBody().getId(),
                 "name", "Dima",
                 "email", "email@",
                 "login", "Login",
@@ -214,7 +208,6 @@ public class UserControllerTest {
     @Test
     void put_ShouldReturnBadRequestWithInvalideEmail() {
         Map<String, Object> user1 = Map.of(
-                "id", 3,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -229,7 +222,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user2 = Map.of(
-                "id", 3,
+                "id", response1.getBody().getId(),
                 "name", "Dasha",
                 "email", "email",
                 "login", "Login",
@@ -244,7 +237,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user3 = Map.of(
-                "id", 3,
+                "id", response1.getBody().getId(),
                 "name", "Peter",
                 "email", " ",
                 "login", "Login",
@@ -266,7 +259,6 @@ public class UserControllerTest {
     @Test
     void put_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> user1 = Map.of(
-                "id", 3,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -281,7 +273,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user2 = Map.of(
-                "id", 3,
+                "id", response1.getBody().getId(),
                 "name", "Dasha",
                 "email", "emaill@",
                 "login", "",
@@ -296,7 +288,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user3 = Map.of(
-                "id", 3,
+                "id", response1.getBody().getId(),
                 "name", "Peter",
                 "email", "eemail@",
                 "login", "Lo gi n",
@@ -320,7 +312,6 @@ public class UserControllerTest {
     @Test
     void put_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> user1 = Map.of(
-                "id", 3,
                 "name", "Name",
                 "email", "email@",
                 "login", "Login",
@@ -335,7 +326,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user2 = Map.of(
-                "id", 3,
+                "id", response1.getBody().getId(),
                 "name", "Dasha",
                 "email", "emaill@",
                 "login", "Login",
@@ -357,7 +348,6 @@ public class UserControllerTest {
     @Test
     void put_ShouldReturnBadRequestWithInvalidId() {
         Map<String, Object> user1 = Map.of(
-                "id", 18,
                 "name", "Alena",
                 "email", "email@",
                 "login", "Login",
@@ -371,7 +361,7 @@ public class UserControllerTest {
         );
 
         Map<String, Object> user2 = Map.of(
-                "id", 20,
+                "id", response1.getBody().getId() + 10,
                 "name", "Dasha",
                 "email", "emaill@",
                 "login", "Login",
@@ -386,6 +376,6 @@ public class UserControllerTest {
 
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response2.getBody().get("error"))
-                .isEqualTo("Пользователь с id = " + 20 + " не найден");
+                .isEqualTo("Пользователь с id = " + (response1.getBody().getId() + 10) + " не найден");
     }
 }

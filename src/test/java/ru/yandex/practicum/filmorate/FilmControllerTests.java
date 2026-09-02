@@ -33,7 +33,6 @@ class FilmControllerTests {
     @Test
     void post_ShouldAddFilmSuccessfully() {
         Map<String, Object> filmRequest = Map.of(
-                "id", 1,
                 "name", "Test Film",
                 "description", "Valid description",
                 "releaseDate", "2021-01-01",
@@ -50,7 +49,6 @@ class FilmControllerTests {
     @Test
     void post_ShouldReturnBadRequestWhenNameIsBlank() {
         Map<String, Object> invalidFilm = Map.of(
-                "id", 104,
                 "name", "   ",
                 "description", "Desc",
                 "releaseDate", "2000-01-01",
@@ -71,7 +69,6 @@ class FilmControllerTests {
     @Test
     void post_ShouldReturnBadRequestWithDescriptionLengthMore200Symbols() {
         Map<String, Object> invalidFilm = Map.of(
-                "id", 9,
                 "name", "NotBlank",
                 "description", "D".repeat(201),
                 "releaseDate", "2000-01-01",
@@ -90,7 +87,6 @@ class FilmControllerTests {
     @Test
     void post_ShouldReturnBadRequestWithInvalidReleaseDate() {
         Map<String, Object> invalidFilm = Map.of(
-                "id", 15,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-27",
@@ -110,7 +106,6 @@ class FilmControllerTests {
     @Test
     void post_ShouldReturnBadRequestWithInvalidDuration() {
         Map<String, Object> film = Map.of(
-                "id", 10,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -130,31 +125,29 @@ class FilmControllerTests {
     @Test
     void get_ShouldReturnListWithFilms() {
         Map<String, Object> film1 = Map.of(
-                "id", 75,
                 "name", "NotBlank",
                 "description", "D",
-                "releaseDate", "1895-12-28",
+                "releaseDate", "1896-12-28",
                 "duration", 150
         );
-        ResponseEntity<Map<String, String>> response1 = restTemplate.exchange(
+        ResponseEntity<Film> response1 = restTemplate.exchange(
                 "/films",
                 HttpMethod.POST,
                 new HttpEntity<>(film1),
-                MAP_TYPE
+                Film.class
         );
 
         Map<String, Object> film2 = Map.of(
-                "id", 3,
                 "name", "Name",
                 "description", "D",
                 "releaseDate", "1895-12-28",
                 "duration", 140
         );
-        ResponseEntity<Map<String, String>> response2 = restTemplate.exchange(
+        ResponseEntity<Film> response2 = restTemplate.exchange(
                 "/films",
                 HttpMethod.POST,
                 new HttpEntity<>(film2),
-                MAP_TYPE
+                Film.class
         );
 
         ResponseEntity<Collection<Film>> getResponse = restTemplate.exchange(
@@ -165,17 +158,18 @@ class FilmControllerTests {
         );
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertTrue(getResponse.getBody().toString()
-                .contains("Film(id=75, name=NotBlank, description=D, releaseDate=1895-12-28, duration=PT2M30S)")
+                .contains("Film(id=" + response1.getBody().getId()
+                        + ", name=NotBlank, description=D, releaseDate=1896-12-28, duration=PT2M30S)")
         );
         assertTrue(getResponse.getBody().toString()
-                .contains("Film(id=3, name=Name, description=D, releaseDate=1895-12-28, duration=PT2M20S)")
+                .contains("Film(id=" + response2.getBody().getId()
+                        + ", name=Name, description=D, releaseDate=1895-12-28, duration=PT2M20S)")
         );
     }
 
     @Test
     void put_shouldReturnUpdatedFilmSuccessfully() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -189,7 +183,7 @@ class FilmControllerTests {
         );
 
         Map<String, Object> invalidFilm2 = Map.of(
-                "id", 2,
+                "id", response1.getBody().getId(),
                 "name", "Name",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -209,7 +203,6 @@ class FilmControllerTests {
     @Test
     void put_ShouldReturnBadRequestWithInvalidName() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -223,7 +216,7 @@ class FilmControllerTests {
         );
 
         Map<String, Object> invalidFilm2 = Map.of(
-                "id", 2,
+                "id", response1.getBody().getId(),
                 "name", " ",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -243,7 +236,6 @@ class FilmControllerTests {
     @Test
     void put_ShouldReturnBadRequestWithInvalidDescription() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -257,7 +249,7 @@ class FilmControllerTests {
         );
 
         Map<String, Object> invalidFilm2 = Map.of(
-                "id", 2,
+                "id", response1.getBody().getId(),
                 "name", "Name",
                 "description", "D".repeat(201),
                 "releaseDate", "1895-12-28",
@@ -277,7 +269,6 @@ class FilmControllerTests {
     @Test
     void put_ShouldReturnBadRequestWithInvalidReleaseDate() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -291,7 +282,7 @@ class FilmControllerTests {
         );
 
         Map<String, Object> invalidFilm2 = Map.of(
-                "id", 2,
+                "id", response1.getBody().getId(),
                 "name", "Name",
                 "description", "D",
                 "releaseDate", "1895-12-27",
@@ -312,7 +303,6 @@ class FilmControllerTests {
     @Test
     void put_ShouldReturnBadRequestWithInvalidDuration() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -326,7 +316,7 @@ class FilmControllerTests {
         );
 
         Map<String, Object> invalidFilm2 = Map.of(
-                "id", 2,
+                "id", response1.getBody().getId(),
                 "name", "Name",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -347,7 +337,6 @@ class FilmControllerTests {
     @Test
     void put_ShouldReturnBadRequestWithInvalidId() {
         Map<String, Object> film1 = Map.of(
-                "id", 2,
                 "name", "NotBlank",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -361,7 +350,7 @@ class FilmControllerTests {
         );
 
         Map<String, Object> invalidFilm2 = Map.of(
-                "id", 5,
+                "id", response1.getBody().getId() + 10,
                 "name", "Name",
                 "description", "D",
                 "releaseDate", "1895-12-28",
@@ -376,6 +365,6 @@ class FilmControllerTests {
 
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(putResponse.getBody().get("error"))
-                .isEqualTo("Фильм с id = " + 5 + " не найден");
+                .isEqualTo("Фильм с id = " + (response1.getBody().getId() + 10) + " не найден");
     }
 }

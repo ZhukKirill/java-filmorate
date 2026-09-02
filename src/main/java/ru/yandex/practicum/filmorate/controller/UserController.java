@@ -42,8 +42,12 @@ public class UserController {
             log.info("дата рождения не может быть в будущем");
             throw new ValidationException("дата рождения не может быть в будущем");
         }
+        long id = getNextId();
+        log.debug("сгенерирован id");
+        user.setId(id);
+        log.debug("пользователю присвоен id");
+        users.put(id, user);
         log.info("пользователь добавлен");
-        users.put(user.getId(), user);
         return user;
     }
 
@@ -84,5 +88,15 @@ public class UserController {
         users.put(user.getId(), user);
         log.info("пользователь обновлен");
         return user;
+    }
+
+    private long getNextId() {
+        long currentMaxId = users.keySet()
+                .stream()
+                .mapToLong(id -> id)
+                .max()
+                .orElse(0);
+        log.debug("вычислен максимальный id");
+        return ++currentMaxId;
     }
 }
