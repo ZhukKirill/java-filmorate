@@ -11,12 +11,12 @@ import java.time.LocalDate;
 
 @Data
 public class Film {
-    Long id;
-    String name;
-    String description;
-    LocalDate releaseDate;
+    private Long id;
+    private String name;
+    private String description;
+    private LocalDate releaseDate;
 
     @JsonSerialize(using = DurationSecondsSerializer.class)
     @JsonDeserialize(using = DurationSecondsDeserializer.class)
-    Duration duration;
+    private Duration duration;
 }

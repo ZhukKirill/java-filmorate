@@ -33,7 +33,7 @@ public class UserControllerTest {
     void post_ShouldAddUserSuccessfully() {
         Map<String, Object> invalidUser = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "user@domain.com",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -57,7 +57,6 @@ public class UserControllerTest {
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
-
         ResponseEntity<Map<String, String>> response1 = restTemplate.exchange(
                 "/users",
                 HttpMethod.POST,
@@ -67,28 +66,30 @@ public class UserControllerTest {
 
         Map<String, Object> invalidUser2 = Map.of(
                 "name", "Name",
-                "email", "email",
+                "email", "email@",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
-
         ResponseEntity<Map<String, String>> response2 = restTemplate.exchange(
                 "/users",
                 HttpMethod.POST,
                 new HttpEntity<>(invalidUser2),
                 MAP_TYPE
         );
+
         assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response1.getBody().get("error")).isEqualTo("электронная почта не может быть пустой");
-        assertThat(response2.getBody().get("error")).isEqualTo("электронная почта должна содержать символ @");
+        assertThat(response1.getBody().get("error"))
+                .isEqualTo("электронная почта должна быть указан и иметь вид: user@domain.tld");
+        assertThat(response2.getBody().get("error"))
+                .isEqualTo("электронная почта должна быть указан и иметь вид: user@domain.tld");
     }
 
     @Test
     void post_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> invalidUser = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@e",
                 "login", " ",
                 "birthday", "2000-01-01"
         );
@@ -108,7 +109,7 @@ public class UserControllerTest {
     void post_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> invalidUser = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Login",
                 "birthday", "2027-01-01"
         );
@@ -128,7 +129,7 @@ public class UserControllerTest {
     void post_ShouldReturnUserWithNameEqualLogin() {
         Map<String, Object> user = Map.of(
                 "name", " ",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Login",
                 "birthday", "2021-01-01"
         );
@@ -147,7 +148,7 @@ public class UserControllerTest {
     void get_ShouldReturnListWithUsers() {
         Map<String, Object> invalidUser1 = Map.of(
                 "name", "Not",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Logiin",
                 "birthday", "2001-01-01"
         );
@@ -161,7 +162,7 @@ public class UserControllerTest {
 
         Map<String, Object> invalidUser2 = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -183,17 +184,17 @@ public class UserControllerTest {
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertTrue(getResponse.getBody().toString()
                 .contains("User(id=" + response1.getBody().getId()
-                        + ", email=email@, login=Logiin, name=Not, birthday=2001-01-01)"));
+                        + ", email=email@e, login=Logiin, name=Not, birthday=2001-01-01)"));
         assertTrue(getResponse.getBody().toString()
                 .contains("User(id=" + response2.getBody().getId()
-                        + ", email=email@, login=Login, name=Name, birthday=2000-01-01)"));
+                        + ", email=email@e, login=Login, name=Name, birthday=2000-01-01)"));
     }
 
     @Test
     void put_ShouldUpdateUserSuccessfully() {
         Map<String, Object> user1 = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Login",
                 "birthday", "2021-01-01"
         );
@@ -208,7 +209,7 @@ public class UserControllerTest {
         Map<String, Object> user2 = Map.of(
                 "id", response1.getBody().getId(),
                 "name", "Dima",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -228,7 +229,7 @@ public class UserControllerTest {
     void put_ShouldReturnBadRequestWithInvalideEmail() {
         Map<String, Object> user1 = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@q",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -271,15 +272,17 @@ public class UserControllerTest {
         );
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response3.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response3.getBody().get("error")).isEqualTo("электронная почта не может быть пустой");
-        assertThat(response2.getBody().get("error")).isEqualTo("электронная почта должна содержать символ @");
+        assertThat(response3.getBody().get("error"))
+                .isEqualTo("электронная почта должна быть указан и иметь вид: user@domain.tld");
+        assertThat(response2.getBody().get("error"))
+                .isEqualTo("электронная почта должна быть указан и иметь вид: user@domain.tld");
     }
 
     @Test
     void put_ShouldReturnBadRequestWithInvalideLogin() {
         Map<String, Object> user1 = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@e",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -294,7 +297,7 @@ public class UserControllerTest {
         Map<String, Object> user2 = Map.of(
                 "id", response1.getBody().getId(),
                 "name", "Dasha",
-                "email", "emaill@",
+                "email", "emaill@e",
                 "login", "",
                 "birthday", "2000-01-01"
         );
@@ -309,7 +312,7 @@ public class UserControllerTest {
         Map<String, Object> user3 = Map.of(
                 "id", response1.getBody().getId(),
                 "name", "Peter",
-                "email", "eemail@",
+                "email", "eemail@q",
                 "login", "Lo gi n",
                 "birthday", "2000-02-01"
         );
@@ -332,7 +335,7 @@ public class UserControllerTest {
     void put_ShouldReturnBadRequestWithInvalideBirthday() {
         Map<String, Object> user1 = Map.of(
                 "name", "Name",
-                "email", "email@",
+                "email", "email@q",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -347,7 +350,7 @@ public class UserControllerTest {
         Map<String, Object> user2 = Map.of(
                 "id", response1.getBody().getId(),
                 "name", "Dasha",
-                "email", "emaill@",
+                "email", "emaill@q",
                 "login", "Login",
                 "birthday", "2028-01-01"
         );
@@ -368,7 +371,7 @@ public class UserControllerTest {
     void put_ShouldReturnBadRequestWithInvalidId() {
         Map<String, Object> user1 = Map.of(
                 "name", "Alena",
-                "email", "email@",
+                "email", "email@q",
                 "login", "Login",
                 "birthday", "2000-01-01"
         );
@@ -382,7 +385,7 @@ public class UserControllerTest {
         Map<String, Object> user2 = Map.of(
                 "id", response1.getBody().getId() + 10,
                 "name", "Dasha",
-                "email", "emaill@",
+                "email", "emaill@q",
                 "login", "Login",
                 "birthday", "2002-01-01"
         );
