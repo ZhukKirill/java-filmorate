@@ -5,4 +5,16 @@ on:
 
 jobs:
   build:
+  runs-on: ubuntu-latest # Обязательно указать раннер для шага run
+    
+    steps:
+      # ✅ ШАГ 1: Очистка кеша apt ПЕРЕД запуском тестов
+      - name: Clean apt cache to fix Hash Sum mismatch
+        run: |
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo apt-get update
+      
+      # ✅ ШАГ 2: Запуск оригинальных автотестов
+      - name: Run API Tests
     uses: yandex-praktikum/java-filmorate/.github/workflows/api-tests.yml@ci
+    
