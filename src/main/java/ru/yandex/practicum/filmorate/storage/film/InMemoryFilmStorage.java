@@ -14,7 +14,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
-        long id = getNextId();
+        Long id = getNextId();
         log.debug("сгенерирован id");
         film.setId(id);
         log.debug("фильму присвоен id");
@@ -40,19 +40,19 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> findById(long id) {
+    public Optional<Film> findById(Long id) {
         if (films.containsKey(id)) return Optional.of(films.get(id));
         return Optional.empty();
     }
 
     @Override
-    public void addLike(long filmId, long userId) {
+    public void addLike(Long filmId, Long userId) {
         films.get(filmId).addLike(userId);
         log.info("лайк пользователя с id = {} добавлен к фильму с id = {}", userId, filmId);
     }
 
     @Override
-    public void deleteLike(long filmId, long userId) {
+    public void deleteLike(Long filmId, Long userId) {
         films.get(filmId).deleteLike(userId);
         log.info("лайк удален");
     }
@@ -64,8 +64,8 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .limit(count).toList();
     }
 
-    private long getNextId() {
-        long currentMaxId = films.keySet()
+    private Long getNextId() {
+        Long currentMaxId = films.keySet()
                 .stream()
                 .mapToLong(id -> id)
                 .max()

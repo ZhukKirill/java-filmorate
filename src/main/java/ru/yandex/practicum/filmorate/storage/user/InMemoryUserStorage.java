@@ -16,7 +16,7 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
 
     public User addUser(User user) {
-        long id = getNextId();
+        Long id = getNextId();
         log.debug("сгенерирован id");
         user.setId(id);
         log.debug("пользователю присвоен id");
@@ -25,15 +25,15 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
-    public Optional<User> findById(long id) {
+    public Optional<User> findById(Long id) {
         if (users.containsKey(id)) {
             return Optional.of(users.get(id));
         }
         return Optional.empty();
     }
 
-    private long getNextId() {
-        long currentMaxId = users.keySet()
+    private Long getNextId() {
+        Long currentMaxId = users.keySet()
                 .stream()
                 .mapToLong(id -> id)
                 .max()
@@ -59,24 +59,24 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(long userId, long friendId) {
+    public void addFriend(Long userId, Long friendId) {
         users.get(userId).addFriend(friendId);
         users.get(friendId).addFriend(userId);
         log.info("друг добавлен");
     }
 
     @Override
-    public void deleteFriend(long userId, long friendId) {
+    public void deleteFriend(Long userId, Long friendId) {
         users.get(userId).deleteFriend(friendId);
         users.get(friendId).deleteFriend(userId);
         log.info("друг удален");
     }
 
-    public Collection<User> findAllFriends(long userId) {
+    public Collection<User> findAllFriends(Long userId) {
         return users.get(userId).getFriends().stream().map(users::get).toList();
     }
 
-    public Collection<User> findCommonFriend(long userId, long otherId) {
+    public Collection<User> findCommonFriend(Long userId, Long otherId) {
         return users.get(userId).getFriends().stream()
                 .filter(id -> users.get(otherId).getFriends().contains(id))
                 .map(users::get).toList();

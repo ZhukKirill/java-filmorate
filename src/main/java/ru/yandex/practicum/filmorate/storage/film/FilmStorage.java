@@ -12,11 +12,11 @@ public interface FilmStorage {
 
     Film updateFilm(Film film);
 
-    Optional<Film> findById(long id);
+    Optional<Film> findById(Long id);
 
-    void addLike(long filmId, long userId);
+    void addLike(Long filmId, Long userId);
 
-    void deleteLike(long filmId, long userId);
+    void deleteLike(Long filmId, Long userId);
 
     Collection<Film> findTopFilms(int count);
 }

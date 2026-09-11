@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
 import java.util.Collection;
 
 @Slf4j
@@ -31,24 +30,27 @@ public class UserService {
         return inMemoryUserStorage.updateUser(user);
     }
 
-    public void addFriend(long userId, long friendId) {
+    public void addFriend(Long userId, Long friendId) {
         userIdCheck(userId);
         userIdCheck(friendId);
+        if (userId.equals(friendId)) {
+            throw new ValidationException("нельзя добавить самого себя в друзья");
+        }
         inMemoryUserStorage.addFriend(userId, friendId);
     }
 
-    public void deleteFriend(long userId, long friendId) {
+    public void deleteFriend(Long userId, Long friendId) {
         userIdCheck(userId);
         userIdCheck(friendId);
         inMemoryUserStorage.deleteFriend(userId, friendId);
     }
 
-    public Collection<User> findAllFriends(long userId) {
+    public Collection<User> findAllFriends(Long userId) {
         userIdCheck(userId);
         return inMemoryUserStorage.findAllFriends(userId);
     }
 
-    public Collection<User> findCommonFriend(long userId, long otherId) {
+    public Collection<User> findCommonFriend(Long userId, Long otherId) {
         userIdCheck(userId);
         userIdCheck(otherId);
         return inMemoryUserStorage.findCommonFriend(userId,otherId);
@@ -58,12 +60,6 @@ public class UserService {
         if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             throw new ValidationException("логин не может быть пустым и содержать пробелы");
         }
-        if (user.getBirthday() == null) {
-            throw new ValidationException("дата рождения должна быть указана");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("дата рождения не может быть в будущем");
-        }
         if (user.getName() == null || user.getName().isBlank()) {
             log.info("имя пользователя не было передано");
             user.setName(user.getLogin());
@@ -71,7 +67,7 @@ public class UserService {
         }
     }
 
-    private void userIdCheck(long userId) {
+    private void userIdCheck(Long userId) {
         if (inMemoryUserStorage.findById(userId).isEmpty()) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }

@@ -9,17 +9,17 @@ public interface UserStorage {
 
     User addUser(User user);
 
-    Optional<User> findById(long id);
+    Optional<User> findById(Long id);
 
     User updateUser(User user);
 
     Collection<User> findAll();
 
-    void addFriend(long userId, long friendId);
+    void addFriend(Long userId, Long friendId);
 
-    void deleteFriend(long userId, long friendId);
+    void deleteFriend(Long userId, Long friendId);
 
-    Collection<User> findAllFriends(long userId);
+    Collection<User> findAllFriends(Long userId);
 
-    Collection<User> findCommonFriend(long userId, long otherId);
+    Collection<User> findCommonFriend(Long userId, Long otherId);
 }

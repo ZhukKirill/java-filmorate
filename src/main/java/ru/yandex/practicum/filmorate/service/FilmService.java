@@ -33,13 +33,13 @@ public class FilmService {
         return inMemoryFilmStorage.updateFilm(film);
     }
 
-    public void addLike(long filmId, long userId) {
+    public void addLike(Long filmId, Long userId) {
         filmIdCheck(filmId);
         userIdCheck(userId);
         inMemoryFilmStorage.addLike(filmId, userId);
     }
 
-    public void deleteLike(long filmId, long userId) {
+    public void deleteLike(Long filmId, Long userId) {
         filmIdCheck(filmId);
         userIdCheck(userId);
         inMemoryFilmStorage.deleteLike(filmId, userId);
@@ -49,13 +49,13 @@ public class FilmService {
         return inMemoryFilmStorage.findTopFilms(count);
     }
 
-    private void filmIdCheck(long filmId) {
+    private void filmIdCheck(Long filmId) {
         if (inMemoryFilmStorage.findById(filmId).isEmpty()) {
             throw new NotFoundException("Фильм с id = " + filmId + " не найден");
         }
     }
 
-    private void userIdCheck(long userId) {
+    private void userIdCheck(Long userId) {
         if (inMemoryUserStorage.findById(userId).isEmpty()) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }

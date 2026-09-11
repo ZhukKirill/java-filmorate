@@ -24,15 +24,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-//    @ExceptionHandler(HttpMessageNotReadableException.class)
-//    public ResponseEntity<Map<String, String>> handleJsonParseError(HttpMessageNotReadableException ex) {
-//        Map<String, String> body = Map.of(
-//                "error", "Некорректный формат JSON: " + ex.getMostSpecificCause().getMessage()
-//        );
-//        log.info(ex.getMessage());
-//        return ResponseEntity.badRequest().body(body);
-//    }
-
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Map<String, String>> handleNotFoundException(NotFoundException ex) {
         Map<String, String> body = Map.of(
