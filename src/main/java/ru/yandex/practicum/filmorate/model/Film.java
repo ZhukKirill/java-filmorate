@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.ToString;
 import ru.yandex.practicum.filmorate.config.DurationSecondsDeserializer;
 import ru.yandex.practicum.filmorate.config.DurationSecondsSerializer;
+import ru.yandex.practicum.filmorate.enums.Genre;
+import ru.yandex.practicum.filmorate.enums.Rating;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -22,6 +24,9 @@ public class Film {
     @JsonSerialize(using = DurationSecondsSerializer.class)
     @JsonDeserialize(using = DurationSecondsDeserializer.class)
     private Duration duration;
+
+    private Set<Genre> genres;
+    private Rating rating;
 
     @ToString.Exclude
     private final Set<Long> likes = new HashSet<>();

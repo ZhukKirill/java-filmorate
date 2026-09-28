@@ -8,8 +8,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -17,7 +15,6 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Map<Long, Film> films = new HashMap<>();
     private final FilmService filmService;
 
     @PostMapping
