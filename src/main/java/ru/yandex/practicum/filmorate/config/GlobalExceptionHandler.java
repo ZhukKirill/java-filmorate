@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,15 +19,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleValidation(ValidationException ex) {
         Map<String, String> body = Map.of(
                 "error", ex.getMessage()
-        );
-        log.info(ex.getMessage());
-        return ResponseEntity.badRequest().body(body);
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> handleJsonParseError(HttpMessageNotReadableException ex) {
-        Map<String, String> body = Map.of(
-                "error", "Некорректный формат JSON: " + ex.getMostSpecificCause().getMessage()
         );
         log.info(ex.getMessage());
         return ResponseEntity.badRequest().body(body);
