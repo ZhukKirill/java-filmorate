@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.enums.FriendshipStatus;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -21,6 +22,8 @@ public class User {
     @NotNull
     private LocalDate birthday;
     private final Set<Long> friends = new HashSet<>();
+
+    private FriendshipStatus status;
 
     public void addFriend(Long friendId) {
         friends.add(friendId);
