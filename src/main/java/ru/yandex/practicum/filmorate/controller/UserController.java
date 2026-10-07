@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.dto.NewUserRequest;
+import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
@@ -19,21 +20,21 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@RequestBody @Valid User user) {
+    public UserDto addUser(@RequestBody @Valid NewUserRequest newUser) {
         log.info("начато добавление пользователя");
-        return userService.addUser(user);
+        return userService.addUser(newUser);
     }
 
     @GetMapping
-    public Collection<User> findAll() {
+    public Collection<UserDto> findAll() {
         log.info("начато получение всех пользователей");
         return userService.findAll();
     }
 
     @PutMapping
-    public User updateUser(@RequestBody @Valid User user) {
+    public UserDto updateUser(@RequestBody @Valid NewUserRequest newUser) {
         log.info("начато обновление данных пользователя");
-        return userService.updateUser(user);
+        return userService.updateUser(newUser);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
@@ -43,6 +44,11 @@ public class UserController {
         userService.addFriend(userId, friendId);
     }
 
+    @GetMapping("/{id}/friends")
+    public Collection<UserDto> findAllFriends(@PathVariable("id") Long userId) {
+        return userService.findAllFriends(userId);
+    }
+
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") Long userId,
                              @PathVariable Long friendId) {
@@ -50,13 +56,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public Collection<User> findCommonFriend(@PathVariable("id") Long userId,
+    public Collection<UserDto> findCommonFriend(@PathVariable("id") Long userId,
                                              @PathVariable Long otherId) {
         return userService.findCommonFriend(userId, otherId);
     }
 
-    @GetMapping("/{id}/friends")
-    public Collection<User> findAllFriends(@PathVariable("id") Long userId) {
-        return userService.findAllFriends(userId);
-    }
 }
