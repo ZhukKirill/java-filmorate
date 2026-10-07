@@ -2,9 +2,9 @@
 
 Template repository for Filmorate project.
 
-\## Схема базы
+## Схема базы
 
 
 
-!\[схема базы](docs/schema.png)
+![схема базы](docs/schema.png)
 
