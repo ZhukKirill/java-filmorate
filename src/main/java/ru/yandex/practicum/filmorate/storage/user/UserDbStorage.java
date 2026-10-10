@@ -49,21 +49,23 @@ public class UserDbStorage extends BaseDbStorage<User> implements UserStorage {
             "WHERE requester_id = ? AND addressee_id = ?";
     private static final String DELETE_FRIENDSHIP_ROW_QUERY = "DELETE FROM friendships " +
             "WHERE requester_id = ? AND addressee_id = ?";
-    private static final String FIND_COMMON_FRIEND_QUERY = "(SELECT us.id, us.email, us.login, us.name, us.birthday " +
-            "FROM users us JOIN friendships f1 ON f1.addressee_id = us.id " +
-            "WHERE f1.requester_id = ? " +
-            "UNION " +
-            "SELECT us.id, us.email, us.login, us.name, us.birthday " +
-            "FROM users us JOIN friendships f2 ON f2.requester_id = us.id " +
-            "WHERE f2.addressee_id = ? AND f2.status = 'CONFIRMED') " +
-            "INTERSECT " +
-            "(SELECT us.id, us.email, us.login, us.name, us.birthday " +
-            "FROM users us JOIN friendships f1 ON f1.addressee_id = us.id " +
-            "WHERE f1.requester_id = ? " +
-            "UNION " +
-            "SELECT us.id, us.email, us.login, us.name, us.birthday " +
-            "FROM users us JOIN friendships f2 ON f2.requester_id = us.id " +
-            "WHERE f2.addressee_id = ? AND f2.status = 'CONFIRMED')";
+    private static final String FIND_COMMON_FRIEND_QUERY = """
+            SELECT us.id, us.email, us.login, us.name, us.birthday
+            FROM users us
+            WHERE us.id IN (
+                (
+                    SELECT addressee_id FROM friendships WHERE requester_id = ?
+                    UNION
+                    SELECT requester_id FROM friendships WHERE addressee_id = ? AND status = 'CONFIRMED'
+                )
+                INTERSECT
+                (
+                    SELECT addressee_id FROM friendships WHERE requester_id = ?
+                    UNION
+                    SELECT requester_id FROM friendships WHERE addressee_id = ? AND status = 'CONFIRMED'
+                )
+            )
+            """;
 
     public UserDbStorage(JdbcTemplate jdbc, JdbcTemplate jdbc1, UserRowMapper userRowMapper, FriendshipRowMapper friendshipRowMapper) {
         super(jdbc);

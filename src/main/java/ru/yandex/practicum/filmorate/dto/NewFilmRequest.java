@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -24,7 +25,10 @@ public class NewFilmRequest {
     @Positive(message = "продолжительность фильма в секундах должна быть больше нуля")
     private Long duration;
 
+    @Valid
+    @NotNull(message = "рейтинг должен быть указан")
     private MpaDto mpa;
+    @Valid
     private List<GenreDto> genres;
 
     @JsonIgnore

@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dto.*;
-import ru.yandex.practicum.filmorate.enums.Genre;
-import ru.yandex.practicum.filmorate.enums.Rating;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
@@ -27,7 +25,6 @@ public class FilmService {
     private final UserStorage userDbStorage;
 
     public FilmDto createFilm(NewFilmRequest newFilm) {
-        validationCheck(newFilm);
         Film film = FilmMapper.mapToFilm(newFilm);
         filmDbStorage.addFilm(film);
         return FilmMapper.mapToFilmDto(film);
@@ -43,7 +40,6 @@ public class FilmService {
     }
 
     public FilmDto updateFilm(NewFilmRequest newFilm) {
-        validationCheck(newFilm);
         if (newFilm.getId() == null) throw new ValidationException("id должен быть указан");
         Film film = FilmMapper.mapToFilm(newFilm);
         film.setId(newFilm.getId());
@@ -92,13 +88,4 @@ public class FilmService {
         userDbStorage.findById(userId);
     }
 
-    private void validationCheck(NewFilmRequest film) {
-        if (film.getMpa() != null) Rating.returnRating(film.getMpa().getId());
-
-        if (film.getGenres() != null) {
-            for (GenreDto genre: film.getGenres()) {
-                Genre.returnGenre(genre.getId());
-            }
-        }
-    }
 }

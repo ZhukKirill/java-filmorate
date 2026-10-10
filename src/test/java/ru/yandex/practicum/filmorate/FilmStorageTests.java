@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DataIntegrityViolationException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.GenreInfo;
@@ -141,7 +140,7 @@ class FilmStorageTests {
         film.setMpa(mpa);
 
         assertThatThrownBy(() -> filmDbStorage.addFilm(film))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 
     @Test

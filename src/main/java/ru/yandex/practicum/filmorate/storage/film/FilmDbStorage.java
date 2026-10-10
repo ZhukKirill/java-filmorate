@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.storage.film.mappers.LikeRowMapper;
 import ru.yandex.practicum.filmorate.storage.film.mappers.MpaRowMapper;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
@@ -32,12 +33,20 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     private static final String FIND_MPA_BY_ID_QUERY = "SELECT * FROM ratings WHERE id = ?";
     private static final String FUND_ALL_GENRES_QUERY = "SELECT * FROM genres ORDER BY id";
     private static final String FIND_GENRES_BY_ID_QUERY = "SELECT * FROM genres WHERE id = ?";
-    private static final String ADD_FILM_GENRE_QUERY = "INSERT INTO film_genres(film_id, genre_id) VALUES (?, ?)";
+    private static final String ADD_FILM_GENRE_QUERY = "INSERT INTO film_genres (film_id, genre_id) VALUES ";
     private static final String UPDATE_FILM_QUERY = "UPDATE films SET name = ?, description = ?, release_date = ?," +
             "duration = ?, rating_id = ?  WHERE id = ?";
     private static final String DELETE_FILM_GENRES_QUERY = "DELETE FROM film_genres WHERE film_id = ?";
     private static final String FIND_ALL_FILM_GENRES_QUERY = "SELECT fg.film_id, fg.genre_id, g.genre AS name FROM " +
             "film_genres fg JOIN genres g ON fg.genre_id = g.id";
+    private static final String FIND_INVALID_GENRE_ID_QUERY = """
+            SELECT requested.id
+            FROM (VALUES %s) AS requested(id)
+            WHERE NOT EXISTS (
+                SELECT 1 FROM genres g WHERE g.id = requested.id
+            )
+            """;
+
     private static final String FIND_GENRES_BY_FILM_ID_QUERY = "SELECT fg.film_id, fg.genre_id, g.genre AS name FROM " +
             "film_genres fg JOIN genres g ON fg.genre_id = g.id WHERE fg.film_id = ?";
     private static final String ADD_LIKE_QUERY = "INSERT INTO film_likes(film_id, user_id) VALUES (?, ?)";
@@ -74,6 +83,8 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
+        findMpaById(film.getMpa().getId());
+        checkGenresId(film);
         long id = insertAndReturnId(
                 INSERT_FILM_QUERY,
                 film.getName(),
@@ -82,11 +93,47 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
                 film.getDuration(),
                 film.getMpa().getId());
         film.setId(id);
-        if (film.getGenres() != null) {
-            List<Long> genresId = film.getGenres().stream().map(GenreInfo::getId).distinct().toList();
-            for (Long genreId : genresId) insert(ADD_FILM_GENRE_QUERY, film.getId(), genreId);
-        }
+        insertIntoFilmGenres(film);
         return film;
+    }
+
+    private void insertIntoFilmGenres(Film film) {
+        if (film.getGenres() != null) {
+            List<Long> genreIds = film.getGenres().stream()
+                    .map(GenreInfo::getId)
+                    .distinct()
+                    .toList();
+
+            String placeholders = genreIds.stream()
+                    .map(id -> "(?, ?)")
+                    .collect(Collectors.joining(", "));
+            String query = ADD_FILM_GENRE_QUERY + placeholders;
+
+            Object[] args = new Object[genreIds.size() * 2];
+            for (int i = 0; i < genreIds.size(); i++) {
+                args[i * 2] = film.getId();
+                args[i * 2 + 1] = genreIds.get(i);
+            }
+            jdbc.update(query, args);
+        }
+    }
+
+    private void checkGenresId(Film film) {
+        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
+            List<Long> genreIds = film.getGenres().stream()
+                    .map(GenreInfo::getId)
+                    .distinct()
+                    .toList();
+            String placeholders = genreIds.stream()
+                    .map(id -> "(?)")
+                    .collect(Collectors.joining(", "));
+            String query = FIND_INVALID_GENRE_ID_QUERY.formatted(placeholders);
+            List<Long> ids = jdbc.query(query, (rs, rowNum) ->
+                    rs.getLong("id"), genreIds.toArray());
+            if (!ids.isEmpty())
+                throw new NotFoundException("Жанры не найдены: " + ids);
+
+        }
     }
 
     @Override
@@ -117,13 +164,12 @@ public class FilmDbStorage extends BaseDbStorage<Film> implements FilmStorage {
     @Override
     public Film updateFilm(Film newFilm) {
         findById(newFilm.getId());
+        findMpaById(newFilm.getMpa().getId());
+        checkGenresId(newFilm);
         update(UPDATE_FILM_QUERY, newFilm.getName(), newFilm.getDescription(), newFilm.getReleaseDate(),
-                newFilm.getDuration(), newFilm.getMpa().getId(), newFilm.getId());
+                newFilm.getDuration(), newFilm.getMpa().getId(), newFilm.getId()); // разобраться
         jdbc.update(DELETE_FILM_GENRES_QUERY, newFilm.getId());
-        if (newFilm.getGenres() != null) {
-            List<Long> genresId = newFilm.getGenres().stream().map(GenreInfo::getId).distinct().toList();
-            for (Long genreId : genresId) insert(ADD_FILM_GENRE_QUERY, newFilm.getId(), genreId);
-        }
+        insertIntoFilmGenres(newFilm);
         return newFilm;
     }
 
